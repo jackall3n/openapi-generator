@@ -228,8 +228,8 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
     }
 
     @Override
-    public String toModelImport(String name) {
-        if (isUnionType(name)) {
+    public String toModelImport( String name){
+        if(isUnionType(name)){
             LOGGER.warn("The import is a union type. Consider using the toModelImportMap method.");
             return toModelImportMap(name).values().stream().collect(Collectors.joining("|"));
         }
@@ -246,24 +246,24 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
     @Override
     public Map<String,String> toModelImportMap( String name){
         if(isUnionType(name)){
-           String[] names = splitUnionType(name);
-           return toImportMap(names);
+            String[] names = splitUnionType(name);
+            return toImportMap(names);
         }
         return toImportMap(name);
     }
 
-    private boolean isUnionType(String name) {
+    private boolean isUnionType(String name){
         return name.contains("|");
     }
 
-    private String[] splitUnionType(String name) {
-        return name.replace(" ", "").split("\\|");
+    private String[] splitUnionType(String name){
+        return  name.replace(" ","").split("\\|");
     }
 
-    private Map<String, String> toImportMap(String... names) {
-        Map<String, String> result = Maps.newHashMap();
-        for (String name : names) {
-            result.put(toModelImport(name), name);
+    private Map<String,String> toImportMap(String... names){
+        Map<String,String> result = Maps.newHashMap();
+        for(String name: names){
+            result.put(toModelImport(name),name);
         }
         return result;
     }
