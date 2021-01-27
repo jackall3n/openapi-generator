@@ -230,8 +230,8 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
     @Override
     public String toModelImport( String name){
         if(isUnionType(name)){
-            LOGGER.warn("The import is a union type. Consider using the toModelImportMap method.");
-            return toModelImportMap(name).values().stream().collect(Collectors.joining("|"));
+           LOGGER.warn("The import is a union type. Consider using the toModelImportMap method.");
+           return toModelImportMap(name).values().stream().collect(Collectors.joining("|"));
         }
         return super.toModelImport(name);
     }
@@ -246,8 +246,8 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
     @Override
     public Map<String,String> toModelImportMap( String name){
         if(isUnionType(name)){
-            String[] names = splitUnionType(name);
-            return toImportMap(names);
+           String[] names = splitUnionType(name);
+           return toImportMap(names);
         }
         return toImportMap(name);
     }
@@ -898,8 +898,8 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
      */
     protected List<String> getTypesFromSchemas(List<Schema> schemas) {
         List<Schema> filteredSchemas = schemas.size() > 1
-                ? schemas.stream().filter(schema -> !"AnyType".equals(super.getSchemaType(schema))).collect(Collectors.toList())
-                : schemas;
+            ? schemas.stream().filter(schema -> !"AnyType".equals(super.getSchemaType(schema))).collect(Collectors.toList())
+            : schemas;
 
         return filteredSchemas.stream().map(schema -> {
             String schemaType = getSchemaType(schema);
