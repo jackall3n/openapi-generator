@@ -78,4 +78,14 @@ public class TypeScriptAxiosClientCodegenTest {
         assertEquals(codegen.toEnumVarName("b", "string"), "B");
     }
 
+    @Test
+    public void testToVarName() {
+        assertEquals(codegen.toVarName("SCIENCE"), "SCIENCE");
+        assertEquals(codegen.toVarName("SCIENCE_FICTION"), "SCIENCE_FICTION");
+        assertEquals(codegen.toVarName("science-fiction"), "'science-fiction'");
+        assertEquals(codegen.toVarName("$scienceFiction"), "$scienceFiction");
+        assertEquals(codegen.toVarName("@ScienceFiction"), "'@ScienceFiction'");
+        assertEquals(codegen.toVarName("Science!Fiction"), "'Science!Fiction'");
+        assertEquals(codegen.toVarName("123"), "'123'");
+    }
 }

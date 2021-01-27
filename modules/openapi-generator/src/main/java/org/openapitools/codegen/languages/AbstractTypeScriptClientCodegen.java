@@ -228,10 +228,10 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
     }
 
     @Override
-    public String toModelImport( String name){
-        if(isUnionType(name)){
-           LOGGER.warn("The import is a union type. Consider using the toModelImportMap method.");
-           return toModelImportMap(name).values().stream().collect(Collectors.joining("|"));
+    public String toModelImport(String name) {
+        if (isUnionType(name)) {
+            LOGGER.warn("The import is a union type. Consider using the toModelImportMap method.");
+            return toModelImportMap(name).values().stream().collect(Collectors.joining("|"));
         }
         return super.toModelImport(name);
     }
@@ -252,18 +252,18 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
         return toImportMap(name);
     }
 
-    private boolean isUnionType(String name){
+    private boolean isUnionType(String name) {
         return name.contains("|");
     }
 
-    private String[] splitUnionType(String name){
-        return  name.replace(" ","").split("\\|");
+    private String[] splitUnionType(String name) {
+        return name.replace(" ", "").split("\\|");
     }
 
-    private Map<String,String> toImportMap(String... names){
-        Map<String,String> result = Maps.newHashMap();
-        for(String name: names){
-            result.put(toModelImport(name),name);
+    private Map<String, String> toImportMap(String... names) {
+        Map<String, String> result = Maps.newHashMap();
+        for (String name : names) {
+            result.put(toModelImport(name), name);
         }
         return result;
     }
@@ -333,7 +333,12 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
 
     @Override
     public String toVarName(String name) {
-        name = sanitizeName(name, "[^\\w$]");
+        name = sanitizeName(name, "", new ArrayList<String>(Arrays.asList("-")));
+
+        // If variable contains invalid characters, wrap in quotes. e.g. @type => '@type', some-prop => 'some-prop'
+        if (!name.matches("^[\\w$]+$") || name.matches("^\\d.*")) {
+            name = "'" + name + "'";
+        }
 
         if ("_".equals(name)) {
             name = "_u";
@@ -893,8 +898,8 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
      */
     protected List<String> getTypesFromSchemas(List<Schema> schemas) {
         List<Schema> filteredSchemas = schemas.size() > 1
-            ? schemas.stream().filter(schema -> !"AnyType".equals(super.getSchemaType(schema))).collect(Collectors.toList())
-            : schemas;
+                ? schemas.stream().filter(schema -> !"AnyType".equals(super.getSchemaType(schema))).collect(Collectors.toList())
+                : schemas;
 
         return filteredSchemas.stream().map(schema -> {
             String schemaType = getSchemaType(schema);
